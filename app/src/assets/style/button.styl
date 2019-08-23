@@ -1,0 +1,22 @@
+@import 'variable.styl'
+
+.Button
+  border none
+  padding 0 15px
+  background-color $secondy
+  border-radius 18px 50px 50px 50px
+  line-height: 45px
+  box-shadow 0 3px 5px rgba(0,0,0, .2)
+  color $cleanColor
+  outline none
+  transition all .1s ease
+  font-size 20px
+
+.Button:active
+  transform translateY(.10px)
+  box-shadow 0 0 0 rgba(0,0,0, .2)
+
++prefix-classes('Button__')
+  .White
+    background-color $cleanColor
+    color $secondy

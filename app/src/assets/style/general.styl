@@ -1,16 +1,50 @@
-$secondy = #3599db;
-$cleanColor = #FFF;
+@import 'variable.styl'
 
-body
-  .wrapper
-    padding 5%
+.wrapper
+  padding 5%
 
-  .Card
-    padding 16px
-    border-radius 16px
-    background $cleanColor
-    font-size 25px
+.Card
+  padding 8%
+  border-radius 15px
+  background $cleanColor
+  font-size 25px
 
-    &.Blue
-      background-color $secondy
-      color $cleanColor
++prefix-classes('Card__')
+  .Blue
+    background-color $secondy
+    color $cleanColor
+
++prefix-classes('Text__')
+  .White
+    color $cleanColor
+
+  .Bold
+    font-weight: bold
+
+  .Right
+    text-align right
+
+  for num in (1..10)
+    size = (num * 4)
+    .Size--{size}
+      font-size "%spx" % size
+
++prefix-classes('Margin__')
+  for num in (1..10)
+    size = (num * 8)
+    .Bottom--{size}      
+      margin-bottom "%spx" % size
+    
+    .Top--{size}      
+      margin-top "%spx" % size
+
+.Flex
+  display flex
+  flex-direction row
+
++prefix-classes('Flex__')
+  .Middle
+    align-items center
+
+  .SpaceBetween
+    justify-content space-between
