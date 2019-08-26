@@ -24,17 +24,17 @@
           v-model='senha'
         />
 
-        <a href='/'>
+        <a href='/esqueci-senha'>
           <text class='Text__White Text__Right Text__Size--5'>Esqueci minha senha</text>
         </a>
       </div>
 
       <div class='Flex Flex__Middle Flex__SpaceBetween'>
-        <a href='/'>
+        <a href='/cadastrar'>
           <text class='Text__White Text__Right Text__Size--20'>Cadastrar</text>
         </a>
 
-        <custom-button text='Entrar' color="White" @click="verify()"></custom-button>
+        <custom-button text='Entrar' color='White' @click='verify()'></custom-button>
       </div>
     </div>
   </div>
@@ -44,7 +44,7 @@
 import Logo from './Logo';
 import Field from '../form/Field';
 import CustomButton from '../form/Button';
-import { login } from '@/services/auth';
+import { login } from '../../services/auth';
 
 const toast = require('@/util/toast');
 
@@ -63,12 +63,14 @@ export default {
   },
   methods: {
     async verify() {
-      const {
-        message,
-      } = await login({
+      this.$emit('loading', true);
+
+      const { message } = await login({
         email: this.email,
         senha: this.senha,
       });
+
+      this.$emit('loading', false);
 
       toast(message);
     },

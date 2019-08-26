@@ -1,21 +1,33 @@
 import backend from './backend';
 
+const validator = require('@/util/validator');
+
+const existInvalid = ({ email, senha }) =>
+  // eslint-disable-next-line no-mixed-operators
+  (email === '' || senha === '') && 'Preencha os campos para logar!' ||
+  // eslint-disable-next-line no-mixed-operators
+  !validator.email(email) && 'Email invalido';
+
 export const store = async (info = {}) => {
-  await backend.post('/post/1', info);
+  const messageError = existInvalid(info);
 
-  let data = {
-    success: false,
-    message: 'Login invalido',
-  };
-
-  if (info.email === 'email@usuario.com' && info.senha === '123456') {
-    data = {
-      success: true,
-      message: 'logado',
+  if (messageError) {
+    return {
+      success: false,
+      message: messageError,
     };
   }
 
-  return data;
+  const loginValido = info.email === 'email@usuario.com' && info.senha === '123456';
+
+  await new Promise(resolve => setTimeout(resolve, 800));
+
+  await backend.get('/posts/1', info);
+
+  return {
+    success: loginValido,
+    message: loginValido ? 'Logado' : 'Login invalido',
+  };
 };
 
 export default {

@@ -29,6 +29,8 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.19.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-regenerator-runtime": "^6.5.0",
     "file-loader": "^4.2.0",
     "phantom-limb": "0.0.1",
     "stylus": "^0.54.5",
@@ -41,6 +43,7 @@
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.2.1",
     "babel-loader": "^7.1.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-stage-0": "^6.24.1",
     "chai": "^4.1.2",
     "css-loader": "^0.28.8",

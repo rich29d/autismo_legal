@@ -1,5 +1,5 @@
 <template>
-  <button :class="classColor" @click="clicked">{{ text }}</button>
+  <button :class="classColor">{{ text }}</button>
 </template>
 
 <script>
@@ -18,12 +18,6 @@ export default {
   computed: {
     classColor() {
       return `Button Button__${this.color}`;
-    },
-  },
-
-  methods: {
-    clicked() {
-      this.$emit('click');
     },
   },
 };
