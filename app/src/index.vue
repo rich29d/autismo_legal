@@ -1,15 +1,17 @@
 <template>
   <div class="wrapper">
-    <loading :display="toggleLoading ? 'show' : 'hide'">
-      <loading-indicator></loading-indicator>
-    </loading>
+    <wxc-loading :show="toggleLoading"></wxc-loading>
 
     <router-view @loading="onLoading"/>
   </div>
 </template>
 
 <script>
+import { WxcLoading } from 'weex-ui';
+
 export default {
+  components: { WxcLoading },
+
   data() {
     return {
       toggleLoading: false,

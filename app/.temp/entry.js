@@ -7,20 +7,6 @@ weex.init(Vue)
 const { router } = require('./router');
 const App = require('@/index.vue');
 
-function openFullscreen() {
-  if (elem.requestFullscreen) {
-    elem.requestFullscreen();
-  } else if (elem.mozRequestFullScreen) { /* Firefox */
-    elem.mozRequestFullScreen();
-  } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
-    elem.webkitRequestFullscreen();
-  } else if (elem.msRequestFullscreen) { /* IE/Edge */
-    elem.msRequestFullscreen();
-  }
-}
-
-openFullscreen();
-
 /* eslint-disable no-new */
-new Vue(Vue.util.extend({ el: '#root', router }, App);
+new Vue(Vue.util.extend({ el: '#root', router }, App));
 router.push('/');

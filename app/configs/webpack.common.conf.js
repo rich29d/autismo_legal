@@ -154,7 +154,7 @@ const webConfig = {
         }],
         exclude: config.excludeModuleReg
       },{
-        test: /\.(jpe?g|png|gif|mp3)$/i,
+        test: /\.(jpe?g|png|gif|mp3|svg)$/i,
         include: [helper.rootNode('src'), helper.rootNode('test')],
         loaders: ['file-loader']
       }

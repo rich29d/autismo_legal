@@ -10,7 +10,7 @@
       <div class='Margin__Bottom--24'>
         <field
           label='Email'
-          type='text'
+          typeField='text'
           placeholder='Digite seu email'
           class='Margin__Bottom--16'
           v-model='email'
@@ -18,19 +18,19 @@
 
         <field
           label='Senha'
-          type='password'
+          typeField='password'
           placeholder='Digite sua senha'
           class='Margin__Bottom--16'
           v-model='senha'
         />
 
-        <a href='/esqueci-senha'>
+        <a href='#/esqueci-senha'>
           <text class='Text__White Text__Right Text__Size--5'>Esqueci minha senha</text>
         </a>
       </div>
 
       <div class='Flex Flex__Middle Flex__SpaceBetween'>
-        <a href='/cadastrar'>
+        <a href='#/cadastrar'>
           <text class='Text__White Text__Right Text__Size--20'>Cadastrar</text>
         </a>
 
@@ -44,7 +44,7 @@
 import Logo from './Logo';
 import Field from '../form/Field';
 import CustomButton from '../form/Button';
-import { login } from '../../services/auth';
+import auth from '../../services/auth';
 
 const toast = require('@/util/toast');
 
@@ -65,10 +65,11 @@ export default {
     async verify() {
       this.$emit('loading', true);
 
-      const { message } = await login({
-        email: this.email,
-        senha: this.senha,
-      });
+      const { message } =
+        await auth.login({
+          email: this.email,
+          senha: this.senha,
+        });
 
       this.$emit('loading', false);
 

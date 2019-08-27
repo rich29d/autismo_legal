@@ -9,14 +9,23 @@
   background $cleanColor
   font-size 25px
 
+.Block
+  display block
+
 +prefix-classes('Card__')
   .Blue
     background-color $secondy
     color $cleanColor
 
+.Text
+  color #333
+
 +prefix-classes('Text__')
   .White
     color $cleanColor
+
+  .Blue
+    color #297bb1;
 
   .Bold
     font-weight: bold
@@ -38,6 +47,9 @@
     .Top--{size}      
       margin-top "%spx" % size
 
+    .Right--{size}      
+      margin-right "%spx" % size
+
 .Flex
   display flex
   flex-direction row
@@ -49,10 +61,5 @@
   .SpaceBetween
     justify-content space-between
 
-.weex-loading
-  height: 100%;
-  position: fixed;
-  background: rgb(242, 197, 39);
-  top: 0;
-  left: 0;
-  z-index: 5;
+.weex-root figure.checkbox
+  margin-right 5px

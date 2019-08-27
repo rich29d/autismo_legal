@@ -4,6 +4,14 @@
     "stage-0"
   ],
   "plugins": [
-    "transform-runtime"
+    "transform-runtime",
+    [
+      "component",
+      {
+          "libraryName": "weex-ui",
+          "libDir": "packages",
+          "style": false
+      }
+  ]
   ]
 }

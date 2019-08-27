@@ -7,17 +7,22 @@ export default {
   props: {
     text: {
       type: String,
-      default: 'Click me!',
+      default: '',
     },
 
     color: {
       type: String,
     },
+
+    type: {
+      type: String,
+      default: 'Normal',
+    },
   },
 
   computed: {
     classColor() {
-      return `Button Button__${this.color}`;
+      return `Button Button__${this.color} Button__${this.type}`;
     },
   },
 };
