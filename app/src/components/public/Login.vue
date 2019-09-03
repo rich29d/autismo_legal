@@ -3,16 +3,16 @@
     <logo></logo>
 
     <div class='Card Card__Blue'>
-      <div class='Margin__Bottom--16'>
-        <text class='Text__White Text__Bold Text__Size--24'>Login</text>
+      <div class='Margin__Bottom--1'>
+        <text class='Text__White Text__Bold Text__Size--4'>Login</text>
       </div>
 
-      <div class='Margin__Bottom--24'>
+      <div class='Margin__Bottom--2'>
         <field
           label='Email'
           typeField='text'
           placeholder='Digite seu email'
-          class='Margin__Bottom--16'
+          class='Margin__Bottom--1'
           v-model='email'
         />
 
@@ -20,18 +20,18 @@
           label='Senha'
           typeField='password'
           placeholder='Digite sua senha'
-          class='Margin__Bottom--16'
+          class='Margin__Bottom--1'
           v-model='senha'
         />
 
         <a href='#/esqueci-senha'>
-          <text class='Text__White Text__Right Text__Size--5'>Esqueci minha senha</text>
+          <text class='Text__White Text__Right Text__Size--3'>Esqueci minha senha</text>
         </a>
       </div>
 
-      <div class='Flex Flex__Middle Flex__SpaceBetween'>
+      <div class='Flex Flex__Middle Flex__SpaceBetween '>
         <a href='#/cadastrar'>
-          <text class='Text__White Text__Right Text__Size--20'>Cadastrar</text>
+          <text class='Text__White Text__Right Text__Size--3'>Cadastrar</text>
         </a>
 
         <custom-button text='Entrar' color='White' @click='verify()'></custom-button>

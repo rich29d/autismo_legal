@@ -3,28 +3,28 @@
     <logo></logo>
 
     <div class='Card Card__Blue'>
-      <div class='Margin__Bottom--16'>
-        <text class='Text__White Text__Bold Text__Size--24'>Cadastro</text>
+      <div class='Margin__Bottom--1'>
+        <text class='Text__White Text__Bold Text__Size--4'>Cadastro</text>
       </div>
 
-      <div class='Margin__Bottom--16'>
-        <text class='Text__White Text__Size--24'>Dados do responsável</text>
+      <div class='Margin__Bottom--2'>
+        <text class='Text__White Text__Size--3'>Dados do responsável</text>
       </div>
 
-      <div class='Margin__Bottom--24'>
+      <div class='Margin__Bottom--3'>
         <field
           label='Nome'
           typeField='text'
           placeholder='Digite seu seu nome'
-          class='Margin__Bottom--16'
-          v-model='responsible.name'
+          class='Margin__Bottom--2'
+          v-model='responsible.nome'
         />
 
         <field
           label='Email'
           typeField='text'
           placeholder='Digite seu email'
-          class='Margin__Bottom--16'
+          class='Margin__Bottom--2'
           v-model='responsible.email'
         />
 
@@ -32,12 +32,28 @@
           label='Celular'
           typeField='text'
           placeholder='Digite seu nº celular'
-          class='Margin__Bottom--16'
-          v-model='responsible.phone'
+          class='Margin__Bottom--2'
+          v-model='responsible.celular'
         />
 
-        <div class='Margin__Bottom--16'>
-          <text class='Text__White Text__Size--24'>Dados da criança</text>
+        <field
+          label='Senha (8 caracteres)'
+          typeField='password'
+          placeholder='Digite a senha'
+          class='Margin__Bottom--2'
+          v-model='responsible.senha'
+        />
+
+        <field
+          label='Repita a senha'
+          typeField='password'
+          placeholder='Repite a senha'
+          class='Margin__Bottom--2'
+          v-model='responsible.repeatSenha'
+        />
+
+        <div class='Margin__Bottom--1'>
+          <text class='Text__White Text__Size--3'>Dados da criança</text>
         </div>
 
         <div class='Card'>
@@ -45,7 +61,7 @@
             v-model='child.name'
             label='Nome da Criança'
             typeField='text'
-            class='Margin__Bottom--16'
+            class='Margin__Bottom--2'
             borderColor='Blue'
             labelColor='Dark'
           />
@@ -56,25 +72,50 @@
             v-model='child.gender'
             label='Sexo'
             typeField='select'
-            class='Margin__Bottom--16'
+            class='Margin__Bottom--2'
             borderColor='Blue'
             labelColor='Dark'
           />
 
-          <field
-            v-model='child.birthday'
-            label='Data de Nascimento'
-            typeField='date'
-            class='Margin__Bottom--16'
-            borderColor='Blue'
-            labelColor='Dark'
-          />
+          <div class='Margin__Bottom--2 Flex Flex__SpaceBetween Flex__Wrap'>
+            <text class='Text__Size--3 w12'>Data de nascimento</text>
+
+            <field
+              :options='calendar.days'
+              v-model='child.birthday.day'
+              placeholder='Dia'
+              typeField='select'
+              class='Width--4'
+              borderColor='Blue'
+              labelColor='Dark'
+            />
+
+            <field
+              :options='calendar.months'
+              v-model='child.birthday.month'
+              placeholder='Mês'
+              typeField='select'
+              class='Width--4'
+              borderColor='Blue'
+              labelColor='Dark'
+            />
+
+            <field
+              :options='calendar.years'
+              v-model='child.birthday.year'
+              placeholder='Ano'
+              typeField='select'
+              class='Width--4'
+              borderColor='Blue'
+              labelColor='Dark'
+            />
+          </div>
 
           <field
             v-model='child.age'
-            label='Idade'
+            label='Idade (anos)'
             typeField='number'
-            class='Margin__Bottom--16'
+            class='Margin__Bottom--2'
             borderColor='Blue'
             labelColor='Dark'
           />
@@ -84,12 +125,12 @@
             v-model='child.relationship'
             label='Relação do usuário para a criança'
             typeField='select'
-            class='Margin__Bottom--16'
+            class='Margin__Bottom--2'
             borderColor='Blue'
             labelColor='Dark'
           />
 
-          <div class='Flex Margin__Bottom--16 Text__Right'>
+          <div class='Flex Margin__Bottom--2 Text__Right'>
             <wxc-checkbox
               style='flex-direction: row-reverse; padding-left: 0;'
               :has-bottom-border='false'
@@ -108,9 +149,9 @@
         </div>
       </div>
 
-      <div class='Margin__Bottom--24' v-show="children.length > 0">
+      <div class='Margin__Bottom--3' v-show="children.length > 0">
         <div
-          class="Child Flex Margin__Bottom--16"
+          class="Child Flex Flex__Middle Flex__SpaceBetween"
           v-for='(itemChild, index) in children'
           :key='itemChild.name + index'
         >
@@ -126,10 +167,10 @@
           </div>
 
           <div class="Child__Text">
-            <text class="Child__Text--name Text__Size--24 Text__White">{{ itemChild.name }}</text>
+            <text class="Child__Text--name Text__Size--3 Text__White">{{ itemChild.name }}</text>
 
             <text
-              class="Child__Text--ageBirthday Text__Blue"
+              class="Child__Text--ageBirthday Text__Size--2 Text__Blue"
             >{{ itemChild.age }} anos {{ birthdayFormated(itemChild.birthday) }}</text>
           </div>
 
@@ -140,8 +181,8 @@
       </div>
 
       <div class='Flex Flex__Middle Flex__SpaceBetween'>
-        <a href='#/cadastrar'>
-          <text class='Text__White Text__Right Text__Size--20'>Já sou cadastrado</text>
+        <a href='#/'>
+          <text class='Text__White Text__Right Text__Size--3'>Login</text>
         </a>
 
         <custom-button text='Cadastrar' color='White' @click='cadastrar()'></custom-button>
@@ -152,6 +193,7 @@
 
 <script>
 import { WxcCheckbox } from 'weex-ui';
+import User from '@/services/user';
 import Logo from './Logo';
 import Field from '../form/Field';
 import CustomButton from '../form/Button';
@@ -172,6 +214,11 @@ export default {
 
   data() {
     return {
+      calendar: {
+        days: this.listNumbers(31),
+        months: this.listNumbers(12),
+        years: this.listNumbers(100, moment().year() - 99),
+      },
       email: '',
       senha: '',
       optionsSelectSexo: [
@@ -203,14 +250,19 @@ export default {
         name: '',
         gender: '',
         age: '',
-        birthday: '',
+        birthday: {
+          day: 0,
+          month: 0,
+          year: 0,
+        },
         relationship: '',
         hasDiagnosis: null,
       },
       responsible: {
-        name: '',
+        nome: '',
         email: '',
-        phone: '',
+        celular: '',
+        senha: '',
       },
     };
   },
@@ -246,7 +298,7 @@ export default {
     },
 
     invalidResponsible() {
-      if (this.responsible.name === '') {
+      if (this.responsible.nome === '') {
         toast('Preencha o nome do responsável!');
         return true;
       }
@@ -256,8 +308,23 @@ export default {
         return true;
       }
 
-      if (this.responsible.phone === '') {
+      if (this.responsible.celular === '') {
         toast('Preencha o telefone do responsável!');
+        return true;
+      }
+
+      if (this.responsible.senha === '') {
+        toast('Preencha a senha!');
+        return true;
+      }
+
+      if (this.responsible.senha.length < 8) {
+        toast('Digite uma senha de no mínimo 8 caracteres!');
+        return true;
+      }
+
+      if (this.responsible.repeatSenha !== this.responsible.senha) {
+        toast('Senhas não conferem.');
         return true;
       }
 
@@ -288,7 +355,7 @@ export default {
       }
 
       this.$emit('loading', true);
-      await new Promise(resolve => setTimeout(resolve, 800));
+      await User.register(this.responsible);
       this.$emit('loading', false);
 
       toast('cadastrado');
@@ -297,6 +364,13 @@ export default {
     birthdayFormated(date) {
       return moment(date).format('DD/MM/YYYY');
     },
+
+    listNumbers(count, initNumber = 1) {
+      return Array(count).fill('').map((el, i) => ({
+        value: i + initNumber,
+        title: i + initNumber,
+      })).reverse();
+    },
   },
 };
 </script>
@@ -304,14 +378,14 @@ export default {
 <style lang="stylus">
   .Child
     background #6dc6f3
-    border-radius 5px
-    padding 20px
+    border-radius 8px
+    padding 4vw
 
   .Child__Icon
     figure
-      padding 25px
+      padding 6vw
       margin-right 15px
 
   .Child__Text
-    max-width 150px
+    max-width 25vw
 </style>

@@ -1,6 +1,6 @@
 const axios = require('axios');
 
 export default axios.create({
-  baseURL: 'https://jsonplaceholder.typicode.com',
+  baseURL: 'https://autismolegal-api-nucleo.azurewebsites.net/api',
   timeout: 5000,
 });

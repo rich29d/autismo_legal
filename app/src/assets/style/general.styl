@@ -4,10 +4,9 @@
   padding 5%
 
 .Card
-  padding 8%
-  border-radius 15px
+  padding 8vw
+  border-radius 5vw
   background $cleanColor
-  font-size 25px
 
 .Block
   display block
@@ -33,22 +32,22 @@
   .Right
     text-align right
 
-  for num in (1..10)
-    size = (num * 4)
-    .Size--{size}
-      font-size "%spx" % size
+  for num in (2..10)
+    size = (num * 2)
+    .Size--{num}
+      font-size "%svw" % size
 
 +prefix-classes('Margin__')
   for num in (1..10)
-    size = (num * 8)
-    .Bottom--{size}      
-      margin-bottom "%spx" % size
+    size = (num * 4)
+    .Bottom--{num}      
+      margin-bottom "%svw" % size
     
-    .Top--{size}      
-      margin-top "%spx" % size
+    .Top--{num}      
+      margin-top "%svw" % size
 
-    .Right--{size}      
-      margin-right "%spx" % size
+    .Right--{num}      
+      margin-right "%svw" % size
 
 .Flex
   display flex
@@ -60,6 +59,17 @@
 
   .SpaceBetween
     justify-content space-between
+
+  .Wrap
+    flex-wrap wrap
+
+for num in (1..11)
+  .Width--{num}
+    width "calc(%s% - 10px)" % (num * 8.33)
+
+  .Width--12
+    width: 100%
+    
 
 .weex-root figure.checkbox
   margin-right 5px

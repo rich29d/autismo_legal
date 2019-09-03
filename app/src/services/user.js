@@ -28,4 +28,8 @@ export default {
       message: 'Email enviado.',
     };
   },
+
+  register(responsable) {
+    return backend.get('/usuario', responsable);
+  },
 };

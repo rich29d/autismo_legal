@@ -3,11 +3,11 @@
     <logo></logo>
 
     <div class='Card Card__Blue'>
-      <div class='Margin__Bottom--24'>
-        <text class='Text__White Text__Size--16'>{{ textForgotPassword }}</text>
+      <div class='Margin__Bottom--1'>
+        <text class='Text__White Text__Size--2'>{{ textForgotPassword }}</text>
       </div>
 
-      <div class='Margin__Bottom--24'>
+      <div class='Margin__Bottom--2'>
         <field
           label='Email'
           type='text'
@@ -19,7 +19,7 @@
 
       <div class='Flex Flex__Middle Flex__SpaceBetween'>
         <a href='/'>
-          <text class='Text__White Text__Right Text__Size--20'>Voltar</text>
+          <text class='Text__White Text__Right Text__Size--3'>Voltar</text>
         </a>
 
         <custom-button text='Enviar' color='White' @click='sendEmail()'></custom-button>

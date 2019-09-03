@@ -2,7 +2,7 @@
   <div class='Field'>
     <text
       :class='classLabelColor'
-      class='Text__Size--16'
+      class='Text__Size--3'
     >{{label}}</text>
 
     <wxc-popup
@@ -51,7 +51,6 @@ export default {
   props: {
     label: {
       type: String,
-      required: true,
     },
 
     valueField: {
