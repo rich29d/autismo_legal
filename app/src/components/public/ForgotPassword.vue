@@ -34,6 +34,7 @@ import Field from '../form/Field';
 import CustomButton from '../form/Button';
 import user from '../../services/user';
 
+const validator = require('@/util/validator');
 const toast = require('@/util/toast');
 
 export default {
@@ -49,16 +50,19 @@ enviaremos uma mensagem para resgistro de nova senha.`,
   components: {
     Logo,
     Field,
+    validator,
     CustomButton,
   },
   methods: {
     async sendEmail() {
+      if (!validator.email(this.email)) {
+        toast('Insira um email valido!');
+        return;
+      }
+
       this.$emit('loading', true);
-
       const { message } = await user.sendEmailForgotPassword(this.email);
-
       this.$emit('loading', false);
-
       toast(message);
     },
   },

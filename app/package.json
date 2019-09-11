@@ -32,6 +32,7 @@
     "babel-polyfill": "^6.26.0",
     "babel-regenerator-runtime": "^6.5.0",
     "file-loader": "^4.2.0",
+    "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "phantom-limb": "0.0.1",
     "stylus": "^0.54.5",

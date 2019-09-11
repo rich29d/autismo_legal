@@ -65,7 +65,7 @@ export default {
     async verify() {
       this.$emit('loading', true);
 
-      const { message } =
+      const { success, message } =
         await auth.login({
           email: this.email,
           senha: this.senha,
@@ -73,7 +73,11 @@ export default {
 
       this.$emit('loading', false);
 
-      toast(message);
+      if (success) {
+        location.assign('#/publicacoes');
+      } else {
+        toast(message);
+      }
     },
   },
 };

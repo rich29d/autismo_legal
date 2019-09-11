@@ -13,43 +13,53 @@
 
       <div class='Margin__Bottom--3'>
         <field
+          v-model='responsible.name'
           label='Nome'
           typeField='text'
           placeholder='Digite seu seu nome'
           class='Margin__Bottom--2'
-          v-model='responsible.nome'
         />
 
         <field
+          v-model='responsible.email'
           label='Email'
           typeField='text'
           placeholder='Digite seu email'
           class='Margin__Bottom--2'
-          v-model='responsible.email'
         />
 
-        <field
-          label='Celular'
-          typeField='text'
-          placeholder='Digite seu nº celular'
-          class='Margin__Bottom--2'
-          v-model='responsible.celular'
-        />
+        <div class='Margin__Bottom--2 Flex Flex__SpaceBetween Flex__Wrap'>
+            <text class='Text__Size--3 Text__White Width--12'>Celular</text>
+
+            <field
+              v-model='responsible.cell.ddd'
+              placeholder='DDD'
+              typeField='number'
+              class='Width--4'
+            />
+
+            <field
+              v-model='responsible.cell.number'
+              placeholder='Celular'
+              typeField='number'
+              class='Width--8'
+            />
+          </div>
 
         <field
+          v-model='responsible.password'
           label='Senha (8 caracteres)'
           typeField='password'
           placeholder='Digite a senha'
           class='Margin__Bottom--2'
-          v-model='responsible.senha'
         />
 
         <field
+          v-model='responsible.repeatPassword'
           label='Repita a senha'
           typeField='password'
           placeholder='Repite a senha'
           class='Margin__Bottom--2'
-          v-model='responsible.repeatSenha'
         />
 
         <div class='Margin__Bottom--1'>
@@ -58,6 +68,7 @@
 
         <div class='Card'>
           <field
+            :valueField='child.name'
             v-model='child.name'
             label='Nome da Criança'
             typeField='text'
@@ -68,7 +79,7 @@
 
           <field
             :options='optionsSelectSexo'
-            :value='child.gender'
+            :valueField='child.gender'
             v-model='child.gender'
             label='Sexo'
             typeField='select'
@@ -82,9 +93,12 @@
 
             <field
               :options='calendar.days'
+              :valueField='child.birthday.day'
+              @input='calculateBirthday'
               v-model='child.birthday.day'
               placeholder='Dia'
               typeField='select'
+              removeArrow
               class='Width--4'
               borderColor='Blue'
               labelColor='Dark'
@@ -92,9 +106,12 @@
 
             <field
               :options='calendar.months'
+              :valueField='child.birthday.month'
+              @input='calculateBirthday'
               v-model='child.birthday.month'
               placeholder='Mês'
               typeField='select'
+              removeArrow
               class='Width--4'
               borderColor='Blue'
               labelColor='Dark'
@@ -102,9 +119,12 @@
 
             <field
               :options='calendar.years'
+              :valueField='child.birthday.year'
+              @input='calculateBirthday'
               v-model='child.birthday.year'
               placeholder='Ano'
               typeField='select'
+              removeArrow
               class='Width--4'
               borderColor='Blue'
               labelColor='Dark'
@@ -112,6 +132,7 @@
           </div>
 
           <field
+            :valueField='child.age'
             v-model='child.age'
             label='Idade (anos)'
             typeField='number'
@@ -122,6 +143,7 @@
 
           <field
             :options='optionsSelectRelacao'
+            :valueField='child.relationship'
             v-model='child.relationship'
             label='Relação do usuário para a criança'
             typeField='select'
@@ -217,7 +239,7 @@ export default {
       calendar: {
         days: this.listNumbers(31),
         months: this.listNumbers(12),
-        years: this.listNumbers(100, moment().year() - 99),
+        years: this.listNumbers(60, moment().year() - 59),
       },
       email: '',
       senha: '',
@@ -245,25 +267,17 @@ export default {
           title: 'Responsável legal',
         },
       ],
-      children: [],
-      child: {
-        name: '',
-        gender: '',
-        age: '',
-        birthday: {
-          day: 0,
-          month: 0,
-          year: 0,
-        },
-        relationship: '',
-        hasDiagnosis: null,
-      },
       responsible: {
-        nome: '',
+        name: '',
         email: '',
-        celular: '',
-        senha: '',
+        cell: {
+          ddd: '',
+          number: '',
+        },
+        password: '',
       },
+      children: [],
+      child: this.resetChild(),
     };
   },
 
@@ -298,7 +312,7 @@ export default {
     },
 
     invalidResponsible() {
-      if (this.responsible.nome === '') {
+      if (this.responsible.name === '') {
         toast('Preencha o nome do responsável!');
         return true;
       }
@@ -308,22 +322,27 @@ export default {
         return true;
       }
 
-      if (this.responsible.celular === '') {
+      if (this.responsible.cell.ddd === '') {
         toast('Preencha o telefone do responsável!');
         return true;
       }
 
-      if (this.responsible.senha === '') {
+      if (this.responsible.cell.number === '') {
+        toast('Preencha o telefone do responsável!');
+        return true;
+      }
+
+      if (this.responsible.password === '') {
         toast('Preencha a senha!');
         return true;
       }
 
-      if (this.responsible.senha.length < 8) {
+      if (this.responsible.password.length < 8) {
         toast('Digite uma senha de no mínimo 8 caracteres!');
         return true;
       }
 
-      if (this.responsible.repeatSenha !== this.responsible.senha) {
+      if (this.responsible.repeatPassword !== this.responsible.password) {
         toast('Senhas não conferem.');
         return true;
       }
@@ -343,6 +362,22 @@ export default {
 
       const newChild = Object.assign({}, this.child);
       this.children.push(newChild);
+      this.child = this.resetChild();
+    },
+
+    resetChild() {
+      return {
+        name: '',
+        gender: '',
+        age: '',
+        birthday: {
+          day: null,
+          month: null,
+          year: null,
+        },
+        relationship: '',
+        hasDiagnosis: null,
+      };
     },
 
     removeChild(index) {
@@ -355,10 +390,28 @@ export default {
       }
 
       this.$emit('loading', true);
-      await User.register(this.responsible);
+      const { success, message } = await User.register(this.responsible);
       this.$emit('loading', false);
 
-      toast('cadastrado');
+      if (success) {
+        location.assign('#/cadastro-sucesso');
+      } else {
+        toast(message);
+      }
+    },
+
+    calculateBirthday() {
+      const {
+        day,
+        month,
+        year,
+      } = this.child.birthday;
+
+      if (!day || !month || !year) {
+        return;
+      }
+
+      this.child.age = moment().diff(`${year}-${month}-${day}`, 'year');
     },
 
     birthdayFormated(date) {

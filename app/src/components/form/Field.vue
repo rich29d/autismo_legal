@@ -19,6 +19,7 @@
     <div
       :class='classBorderColor'
       :value='valueField'
+      :style='{backgroundImage: removeArrow ? "none" : null }'
       v-if='typeField === "select"'
       @click='openBottomPopup'
       class='Field__Select Flex Flex__Middle'
@@ -31,7 +32,6 @@
       :type='typeField'
       :placeholder='placeholder'
       :class='classBorderColor'
-      :value='valueField'
       v-model='content'
       v-else
       @input='handleInput'
@@ -80,11 +80,19 @@ export default {
       type: String,
       default: 'White',
     },
+
+    pattern: {
+      type: String,
+    },
+
+    removeArrow: {
+      type: Boolean,
+    },
   },
 
   data() {
     return {
-      content: this.value,
+      content: this.valueField,
       isBottomShow: false,
       checkedInfo: {},
     };
@@ -100,16 +108,25 @@ export default {
     },
   },
 
+  watch: {
+    valueField(val) {
+      this.content = val || '';
+    },
+  },
+
   methods: {
     handleInput() {
       this.$emit('input', this.content);
     },
+
     openBottomPopup() {
       this.isBottomShow = true;
     },
+
     popupOverlayBottomClick() {
       this.isBottomShow = false;
     },
+
     wxcRadioListChecked(e) {
       this.checkedInfo = e;
       this.content = e.title;
@@ -122,4 +139,7 @@ export default {
 
 <style scoped lang='stylus'>
   @import '~@/assets/style/field.styl'
+
+  .scroller
+    height 100%
 </style>

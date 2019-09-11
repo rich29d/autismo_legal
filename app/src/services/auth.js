@@ -1,5 +1,6 @@
 import backend from '@/api/backend';
 
+const { get } = require('lodash');
 const validator = require('@/util/validator');
 
 const existInvalid = ({ email, senha }) =>
@@ -19,16 +20,17 @@ export default {
       };
     }
 
-    const loginValido = info.email === 'email@usuario.com' && info.senha === '123456';
+    const response = await backend.post('/Usuario/login', {
+      login: info.email,
+      senha: info.senha,
+    });
 
-    await new Promise(resolve => setTimeout(resolve, 800));
+    if (response.success) {
+      localStorage.setItem('idUser', get(response, 'dados.user.idUsuario'));
+      localStorage.setItem('token', get(response, 'dados.access_token'));
+    }
 
-    await backend.get('/posts/1', info);
-
-    return {
-      success: loginValido,
-      message: loginValido ? 'Logado' : 'Login invalido',
-    };
+    return response;
   },
 
   logout() {
