@@ -1,4 +1,4 @@
-import backend from '@/api/backend';
+import auth from '@/api/auth';
 
 const validator = require('@/util/validator');
 
@@ -19,7 +19,7 @@ export default {
       };
     }
 
-    return backend.post('/Usuario/esqueciminhasenha', { email });
+    return auth.post('/Usuario/esqueciminhasenha', { email });
   },
 
   register(responsable) {
@@ -42,6 +42,8 @@ export default {
       status: 1,
     };
 
-    return backend.post('/Usuario', user);
+    console.log(user);
+
+    return auth.post('/Usuario', user);
   },
 };

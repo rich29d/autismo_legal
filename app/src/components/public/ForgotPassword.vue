@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class='Margin__Left--2 Margin__Right--2'>
     <logo></logo>
 
     <div class='Card Card__Blue'>
@@ -18,9 +18,9 @@
       </div>
 
       <div class='Flex Flex__Middle Flex__SpaceBetween'>
-        <a href='/'>
+        <router-link :to="{ path: '/'}">
           <text class='Text__White Text__Right Text__Size--3'>Voltar</text>
-        </a>
+        </router-link>
 
         <custom-button text='Enviar' color='White' @click='sendEmail()'></custom-button>
       </div>

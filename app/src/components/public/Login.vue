@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class='Margin__Left--2 Margin__Right--2'>
     <logo></logo>
 
     <div class='Card Card__Blue'>
@@ -24,15 +24,15 @@
           v-model='senha'
         />
 
-        <a href='#/esqueci-senha'>
+        <router-link :to="{ path: 'esqueci-senha'}">
           <text class='Text__White Text__Right Text__Size--3'>Esqueci minha senha</text>
-        </a>
+        </router-link>
       </div>
 
       <div class='Flex Flex__Middle Flex__SpaceBetween '>
-        <a href='#/cadastrar'>
+        <router-link :to="{ path: 'cadastrar'}">
           <text class='Text__White Text__Right Text__Size--3'>Cadastrar</text>
-        </a>
+        </router-link>
 
         <custom-button text='Entrar' color='White' @click='verify()'></custom-button>
       </div>

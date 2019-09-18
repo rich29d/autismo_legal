@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class='Margin__Left--2 Margin__Right--2'>
     <logo></logo>
 
     <div class='Card Card__Blue'>
@@ -92,39 +92,33 @@
             <text class='Text__Size--3 w12'>Data de nascimento</text>
 
             <field
-              :options='calendar.days'
-              :valueField='child.birthday.day'
               @input='calculateBirthday'
               v-model='child.birthday.day'
               placeholder='Dia'
-              typeField='select'
-              removeArrow
+              typeField='number'
+              maxLength='2'
               class='Width--4'
               borderColor='Blue'
               labelColor='Dark'
             />
 
             <field
-              :options='calendar.months'
-              :valueField='child.birthday.month'
               @input='calculateBirthday'
               v-model='child.birthday.month'
               placeholder='Mês'
-              typeField='select'
-              removeArrow
+              typeField='number'
+              maxLength='2'
               class='Width--4'
               borderColor='Blue'
               labelColor='Dark'
             />
 
             <field
-              :options='calendar.years'
-              :valueField='child.birthday.year'
               @input='calculateBirthday'
               v-model='child.birthday.year'
               placeholder='Ano'
-              typeField='select'
-              removeArrow
+              typeField='number'
+              maxLength='4'
               class='Width--4'
               borderColor='Blue'
               labelColor='Dark'
@@ -156,6 +150,7 @@
             <wxc-checkbox
               style='flex-direction: row-reverse; padding-left: 0;'
               :has-bottom-border='false'
+              @wxcCheckBoxItemChecked="setHasDiagnosis"
               v-model='child.hasDiagnosis'
               title="Já tem diagnostico"
             ></wxc-checkbox>
@@ -207,7 +202,7 @@
           <text class='Text__White Text__Right Text__Size--3'>Login</text>
         </a>
 
-        <custom-button text='Cadastrar' color='White' @click='cadastrar()'></custom-button>
+        <custom-button text='Cadastrar' color='White' @click='register()'></custom-button>
       </div>
     </div>
   </div>
@@ -215,7 +210,9 @@
 
 <script>
 import { WxcCheckbox } from 'weex-ui';
-import User from '@/services/user';
+import UserService from '@/services/user';
+import ChildService from '@/services/child';
+import AuthService from '../../services/auth';
 import Logo from './Logo';
 import Field from '../form/Field';
 import CustomButton from '../form/Button';
@@ -236,11 +233,6 @@ export default {
 
   data() {
     return {
-      calendar: {
-        days: this.listNumbers(31),
-        months: this.listNumbers(12),
-        years: this.listNumbers(60, moment().year() - 59),
-      },
       email: '',
       senha: '',
       optionsSelectSexo: [
@@ -282,6 +274,9 @@ export default {
   },
 
   methods: {
+    setHasDiagnosis($event) {
+      this.child.hasDiagnosis = $event.checked;
+    },
     invalidChild() {
       if (this.child.name === '') {
         toast('Preencha o nome da criança!');
@@ -384,20 +379,47 @@ export default {
       this.children.splice(index, 1);
     },
 
-    async cadastrar() {
+    async register() {
       if (this.invalidResponsible()) {
         return;
       }
 
       this.$emit('loading', true);
-      const { success, message } = await User.register(this.responsible);
+      const { success: successUser, message: messageUser } = 
+        await UserService.register(this.responsible);
+
+      if (!successUser) {
+        toast(messageUser || 'Falha ao cadastrar responsável.');
+        this.$emit('loading', false);
+        return;
+      }
+
+      const { success: successLogin, message: messageLogin, data: user } = 
+        await AuthService.login({
+          email: this.responsible.email,
+          senha: this.responsible.password,
+        });
+
+      if (!successLogin) {
+        toast('Falha ao cadastrar responsável.');
+        this.$emit('loading', false);
+        return;
+      }
+
+      this.responsible = Object.assign(this.responsible, user);
+
+      const childrenRegisters = await this.children.map(async child => ChildService.register(child, this.responsible));
+
+      /*if (childrenRegisters.some(({success}) => !success)) {
+        toast('Falha ao cadastrar uma criança.');
+        return;
+      }*/
+
+      AuthService.logout();
+
       this.$emit('loading', false);
 
-      if (success) {
-        location.assign('#/cadastro-sucesso');
-      } else {
-        toast(message);
-      }
+      location.assign('#/cadastro-sucesso');
     },
 
     calculateBirthday() {
@@ -411,7 +433,7 @@ export default {
         return;
       }
 
-      this.child.age = moment().diff(`${year}-${month}-${day}`, 'year');
+      this.child.age = String(moment().diff(`${year}-${month}-${day}`, 'year'));
     },
 
     birthdayFormated(date) {

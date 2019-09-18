@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class='Margin__Left--2 Margin__Right--2'>
     <logo></logo>
 
     <div class='Card Card__Blue'>

@@ -1,5 +1,8 @@
 <template>
-  <button :class="classColor">{{ text }}</button>
+  <button :class="classColor">
+    <text v-if='icon' class='icon' v-html='`&#x${icon};`'/>
+    {{ text }}
+  </button>
 </template>
 
 <script>
@@ -11,6 +14,11 @@ export default {
     },
 
     color: {
+      type: String,
+      default: '',
+    },
+
+    icon: {
       type: String,
     },
 

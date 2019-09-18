@@ -28,10 +28,22 @@
       <img src="" alt="">
     </div>
 
+    <textarea
+      :type='typeField'
+      :placeholder='placeholder'
+      :class='classBorderColor'
+      :maxlength="maxLength"
+      v-model='content'
+      v-else-if='typeField === "textarea"'
+      @input='handleInput'
+      class='Field__Textarea'
+    />
+
     <input
       :type='typeField'
       :placeholder='placeholder'
       :class='classBorderColor'
+      :maxlength="maxLength"
       v-model='content'
       v-else
       @input='handleInput'
@@ -85,8 +97,8 @@ export default {
       type: String,
     },
 
-    removeArrow: {
-      type: Boolean,
+    maxLength: {
+      type: Number,
     },
   },
 

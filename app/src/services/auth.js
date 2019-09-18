@@ -1,4 +1,4 @@
-import backend from '@/api/backend';
+import auth from '@/api/auth';
 
 const { get } = require('lodash');
 const validator = require('@/util/validator');
@@ -20,7 +20,7 @@ export default {
       };
     }
 
-    const response = await backend.post('/Usuario/login', {
+    const response = await auth.post('/Usuario/login', {
       login: info.email,
       senha: info.senha,
     });
@@ -36,6 +36,5 @@ export default {
   logout() {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
-    window.location.assign('/');
   },
 };
