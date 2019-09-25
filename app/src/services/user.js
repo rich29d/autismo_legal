@@ -34,15 +34,13 @@ export default {
         nome: responsable.name,
         sexo: 'I',
         email: responsable.email,
-        celular: responsable.cell.ddd + responsable.cell.number,
+        celular: responsable.cell,
         idUsuario: 0,
         foto: '',
         dataNascimento: '2000-01-01',
       },
       status: 1,
     };
-
-    console.log(user);
 
     return auth.post('/Usuario', user);
   },

@@ -19,7 +19,6 @@
     <div
       :class='classBorderColor'
       :value='valueField'
-      :style='{backgroundImage: removeArrow ? "none" : null }'
       v-if='typeField === "select"'
       @click='openBottomPopup'
       class='Field__Select Flex Flex__Middle'
@@ -98,7 +97,7 @@ export default {
     },
 
     maxLength: {
-      type: Number,
+      type: Number|String,
     },
   },
 

@@ -4,17 +4,17 @@ export default {
   register(child, responsable) {
     const childUser = {
       idCrianca: 0,
-      idPessoa: 0,
-      idResponsavel: responsable.user.idUsuario,
-      diagnosticoFechado: child.hasDiagnosis,
+      idPessoa: responsable.idPessoa,
+      idResponsavel: responsable.idResponsavel,
+      diagnosticoFechado: child.hasDiagnosis || false,
       pessoa: {
         idPessoa: 0,
         nome: child.name,
         sexo: child.gender,
         email: responsable.email,
-        celular: responsable.cell.ddd + responsable.cell.number,
+        celular: responsable.cell,
         foto: '',
-        dataNascimento: `${child.birthday.year}-${child.birthday.month}-${child.birthday.day}`,
+        dataNascimento: child.birthday,
       },
     };
 

@@ -31,21 +31,12 @@
         <div class='Margin__Bottom--2 Flex Flex__SpaceBetween Flex__Wrap'>
             <text class='Text__Size--3 Text__White Width--12'>Celular</text>
 
-            <field
-              @input="verifyCell('ddd')"
-              v-model='responsible.cell.ddd'
-              placeholder='DDD'
-              typeField='number'
-              class='Width--4'
-            />
-
-            <field
-              @focus='verifyCell("cell")'
-              v-model='responsible.cell.number'
-              placeholder='Celular'
-              typeField='number'
-              class='Width--8'
-              ref='cell'
+            <input
+              type="text"
+              v-mask="'(##) # ####-####'"
+              v-model="responsableCell"
+              @input="responsible.cell = responsableCell.replace(/\D/g, '')"
+              class="Width--12 Field__Input"
             />
           </div>
 
@@ -94,41 +85,7 @@
           <div class='Margin__Bottom--2 Flex Flex__SpaceBetween Flex__Wrap'>
             <text class='Text__Size--3 w12'>Data de nascimento</text>
 
-            <field
-            :valueField='child.birthday.month'
-              @input='calculateBirthday'
-              v-model='child.birthday.day'
-              placeholder='DD'
-              typeField='number'
-              maxLength='2'
-              class='Width--4'
-              borderColor='Blue'
-              labelColor='Dark'
-            />
-
-            <field
-              :valueField='child.birthday.month'
-              @input='calculateBirthday'
-              v-model='child.birthday.month'
-              placeholder='MM'
-              typeField='number'
-              maxLength='2'
-              class='Width--4'
-              borderColor='Blue'
-              labelColor='Dark'
-            />
-
-            <field
-              :valueField='child.birthday.year'
-              @input='calculateBirthday'
-              v-model='child.birthday.year'
-              placeholder='AAAA'
-              typeField='number'
-              maxLength='4'
-              class='Width--4'
-              borderColor='Blue'
-              labelColor='Dark'
-            />
+            <input type="text" v-mask="'##/##/####'" v-model="childBirthday" @input="calculateBirthday" class="Width--12 Field__Input Field__Border--Blue">
           </div>
 
           <field
@@ -194,7 +151,7 @@
 
             <text
               class="Child__Text--ageBirthday Text__Size--2 Text__Blue"
-            >{{ itemChild.age }} anos {{ birthdayFormated(itemChild.birthday) }}</text>
+            >{{ itemChild.age }} anos {{ formateDate(itemChild.birthday) }}</text>
           </div>
 
           <div class="Flex Flex__Middle">
@@ -216,8 +173,10 @@
 
 <script>
 import { WxcCheckbox } from 'weex-ui';
+import { mask } from 'vue-the-mask'
 import UserService from '@/services/user';
 import ChildService from '@/services/child';
+import ResponsableService from '@/services/responsable';
 import AuthService from '../../services/auth';
 import Logo from './Logo';
 import Field from '../form/Field';
@@ -230,6 +189,8 @@ const moment = require('moment');
 export default {
   name: 'Cadastro',
 
+  directives: { mask },
+
   components: {
     Logo,
     Field,
@@ -241,6 +202,7 @@ export default {
     return {
       email: '',
       senha: '',
+      responsableCell: '',
       optionsSelectSexo: [
         {
           value: 1,
@@ -268,12 +230,10 @@ export default {
       responsible: {
         name: '',
         email: '',
-        cell: {
-          ddd: '',
-          number: '',
-        },
+        cell: '',
         password: '',
       },
+      childBirthday: '',
       children: [],
       child: this.resetChild(),
     };
@@ -301,6 +261,16 @@ export default {
 
       if (!validator.number(this.child.age)) {
         toast('Idade inválida, insira apenas números!');
+        return true;
+      }
+
+      if (+moment().diff(this.child.birthday, 'year') < 0) {
+        toast('Data de nascimento inválida.');
+        return true;
+      }
+
+      if (+this.child.age < 0) {
+        toast('Idade inválida!');
         return true;
       }
 
@@ -364,6 +334,7 @@ export default {
       const newChild = Object.assign({}, this.child);
       this.children.push(newChild);
       this.child = this.resetChild();
+      this.childBirthday = '';
     },
 
     resetChild() {
@@ -371,13 +342,9 @@ export default {
         name: '',
         gender: '',
         age: '',
-        birthday: {
-          day: '',
-          month: '',
-          year: '',
-        },
+        birthday: '',
         relationship: '',
-        hasDiagnosis: null,
+        hasDiagnosis: false,
       };
     },
 
@@ -391,6 +358,7 @@ export default {
       }
 
       this.$emit('loading', true);
+      
       const { success: successUser, message: messageUser } = 
         await UserService.register(this.responsible);
 
@@ -400,7 +368,7 @@ export default {
         return;
       }
 
-      const { success: successLogin, message: messageLogin, data: user } = 
+      const { success: successLogin, message: messageLogin, data: { user } } = 
         await AuthService.login({
           email: this.responsible.email,
           senha: this.responsible.password,
@@ -412,38 +380,49 @@ export default {
         return;
       }
 
-      this.responsible = Object.assign(this.responsible, user);
+      const { success: successResponsible, message: messageResponsible, content: responsible } = 
+        await ResponsableService.register(user.idPessoa);
 
-      const childrenRegisters = await this.children.map(async child => ChildService.register(child, this.responsible));
-
-      /*if (childrenRegisters.some(({success}) => !success)) {
-        toast('Falha ao cadastrar uma criança.');
-        return;
-      }*/
-
-      AuthService.logout();
-
-      this.$emit('loading', false);
-
-      location.assign('#/cadastro-sucesso');
-    },
-
-    calculateBirthday() {
-      const {
-        day,
-        month,
-        year,
-      } = this.child.birthday;
-
-      if (!day || !month || !year) {
+      if (!successResponsible) {
+        toast(messageResponsible || 'Falha ao cadastrar responsável.');
+        this.$emit('loading', false);
         return;
       }
 
-      this.child.age = String(moment().diff(`${year}-${month}-${day}`, 'year'));
+      this.responsible = Object.assign(this.responsible, user, responsible);
+
+      const childrenPromoses = this.children.map(child =>
+        ChildService.register(child, this.responsible)
+      );
+
+      Promise
+        .all(childrenPromoses)
+        .then(children => {
+          if (children.some(({success}) => !success)) {
+            toast('Falha ao cadastrar uma criança.');
+            return;
+          }
+
+          AuthService.logout();
+          this.$emit('loading', false);
+          location.assign('#/cadastro-sucesso');
+        })      
     },
 
-    birthdayFormated(date) {
-      return moment(date).format('DD/MM/YYYY');
+    calculateBirthday($event) {
+      const { birthday } = this.child;
+      
+      if ($event.value.length < 10) {
+        return;
+      }
+
+      this.child.birthday = moment(this.childBirthday, 'DD/MM/YYYY').format('YYYY-MM-DD');
+      const birthdayFormat = moment($event.value, 'DD/MM/YYYY');
+      this.child.age = String(moment().diff(birthdayFormat, 'year'));
+    },
+
+    formateDate(date) {
+      return moment(date).format('DD/MM/YYYY')
     },
 
     listNumbers(count, initNumber = 1) {
@@ -454,14 +433,15 @@ export default {
     },
 
     verifyCell(number) {
-      console.log(number)
-      number.length == 2 && this.$refs.cell.focus();
+      number.length >= 2 && this.$refs['cellPhone'].focus();
     }
   },
 };
 </script>
 
 <style lang="stylus">
+  @import '~@/assets/style/field.styl'
+
   .Child
     background #6dc6f3
     border-radius 8px
