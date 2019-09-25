@@ -26,8 +26,8 @@ export default {
     });
 
     if (response.success) {
-      localStorage.setItem('idUser', get(response, 'dados.user.idUsuario'));
-      localStorage.setItem('token', get(response, 'dados.access_token'));
+      localStorage.setItem('idUser', get(response, 'data.user.idUsuario'));
+      localStorage.setItem('token', get(response, 'data.access_token'));
     }
 
     return response;

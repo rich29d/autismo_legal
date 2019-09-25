@@ -71,8 +71,8 @@ export default {
       this.items = [];
 
       const { success, message, content } = await PostService.search({
-        category: this.category || 'a',
-        term: this.term || 'a',
+        category: this.category || '',
+        term: this.term || '',
       });
 
       this.$emit("loading", false);
@@ -98,7 +98,7 @@ export default {
   background: #F00;
   border-radius: 50%;
   background-color: $secondy;
-  z-index: 2;
+  z-index: 8;
   width: 0;
   height: 0;
   top: 30px;
@@ -113,7 +113,7 @@ export default {
 }
 
 .Search__Content {
-  z-index: 4;
+  z-index: 10;
   width: 84vw;
 }
 </style>

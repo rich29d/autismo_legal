@@ -54,6 +54,7 @@ export const router = new Router({
       component: UserPage,
       meta: {
         title: 'PUBLICAÇÕES',
+        menu: 'Post',
       },
     },
 
@@ -63,6 +64,16 @@ export const router = new Router({
       component: UserPage,
       meta: {
         title: 'CADASTRO',
+      },
+    },
+
+    {
+      path: '/guias',
+      name: 'guide/Index',
+      component: UserPage,
+      meta: {
+        title: 'GUIAS DO RESPONSÀVEL',
+        menu: 'Guide',
       },
     },
   ],

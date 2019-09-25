@@ -188,7 +188,7 @@ export default {
   background: #F00;
   border-radius: 50%;
   background-color: $yellow;
-  z-index: 2;
+  z-index: 8;
   width: 0;
   height: 0;
   top: 30px;
@@ -203,7 +203,7 @@ export default {
 }
 
 .Register__Content {
-  z-index: 4;
+  z-index: 10;
   width: 84vw;
 }
 </style>

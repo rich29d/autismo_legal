@@ -7,6 +7,9 @@
 .Block
   display block
 
+.Inline__Block
+  display inline-block
+
 .Text
   color #333
 
@@ -88,6 +91,9 @@
   .SpaceBetween
     justify-content space-between
 
+  .SpaceAround
+    justify-content space-around
+
   .Wrap
     flex-wrap wrap
 
@@ -115,3 +121,14 @@ for num in (1..11)
   transform translateY(-2vw)
   opacity 0
   animation fadeFromTop .5s ease forwards
+
+.Modal
+  @extend .Fixed
+  @extend .Position__Top
+  @extend .Position__Left
+
+  z-index 6
+  width 100%
+  height 100vh
+  overflow auto
+  background #FFF

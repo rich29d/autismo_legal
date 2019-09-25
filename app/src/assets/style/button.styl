@@ -27,6 +27,49 @@
     p
       font-size 7vw
       color: #FFF
+
+  .Post
+    background url("~@/assets/images/document.svg") center center / 60% no-repeat
+
+    &.Active
+      background-color: #f1c310
+
+  .Guide
+    background url("~@/assets/images/002-sign-post.svg") center center / 60% no-repeat
+
+    &.Active
+      background-color: #2DA4E0
+  
+  .Menu
+    box-shadow none
+    padding: 4vw;
+    width 15vw
+    height 15vw
+    text-align center
+    border-radius 5px
+    display flex
+    justify-content center
+    
+
+    p
+      font-size 7vw
+      
+    span
+      color #B5B5B5
+      opacity 0
+
+    &.Active
+      border-radius: 5ox
+      margin-bottom 15px
+      margin-top: -7vw
+      box-shadow 0 3px 6px rgba(0, 0, 0, .16)
+
+      p
+        color: #FFF
+
+      span
+        margin-top: 43px;
+        opacity 1
   
   .Close
     border-radius 50%

@@ -32,6 +32,7 @@
             <text class='Text__Size--3 Text__White Width--12'>Celular</text>
 
             <field
+              @input="verifyCell('ddd')"
               v-model='responsible.cell.ddd'
               placeholder='DDD'
               typeField='number'
@@ -39,10 +40,12 @@
             />
 
             <field
+              @focus='verifyCell("cell")'
               v-model='responsible.cell.number'
               placeholder='Celular'
               typeField='number'
               class='Width--8'
+              ref='cell'
             />
           </div>
 
@@ -92,9 +95,10 @@
             <text class='Text__Size--3 w12'>Data de nascimento</text>
 
             <field
+            :valueField='child.birthday.month'
               @input='calculateBirthday'
               v-model='child.birthday.day'
-              placeholder='Dia'
+              placeholder='DD'
               typeField='number'
               maxLength='2'
               class='Width--4'
@@ -103,9 +107,10 @@
             />
 
             <field
+              :valueField='child.birthday.month'
               @input='calculateBirthday'
               v-model='child.birthday.month'
-              placeholder='Mês'
+              placeholder='MM'
               typeField='number'
               maxLength='2'
               class='Width--4'
@@ -114,9 +119,10 @@
             />
 
             <field
+              :valueField='child.birthday.year'
               @input='calculateBirthday'
               v-model='child.birthday.year'
-              placeholder='Ano'
+              placeholder='AAAA'
               typeField='number'
               maxLength='4'
               class='Width--4'
@@ -343,7 +349,7 @@ export default {
       }
 
       if (this.children.length === 0) {
-        toast('Insira uma criança!');
+        toast('Adicione uma criança!');
         return true;
       }
 
@@ -366,9 +372,9 @@ export default {
         gender: '',
         age: '',
         birthday: {
-          day: null,
-          month: null,
-          year: null,
+          day: '',
+          month: '',
+          year: '',
         },
         relationship: '',
         hasDiagnosis: null,
@@ -446,6 +452,11 @@ export default {
         title: i + initNumber,
       })).reverse();
     },
+
+    verifyCell(number) {
+      console.log(number)
+      number.length == 2 && this.$refs.cell.focus();
+    }
   },
 };
 </script>

@@ -2,14 +2,14 @@
   <div class="Flex Flex__SpaceBetween">
     <div class="Logo"></div>
     <wxc-loading :show="toggleLoading"></wxc-loading>
-    <register @loading="onLoading" @loadPosts='$emit("reload", true);'/>
-    <search @loading="onLoading"/>
+    <register-post v-if='!noShow.registerPost.includes($route.name)' @loading="onLoading" @loadPosts='$emit("reload", true);'/>
+    <search v-if='!noShow.search.includes($route.name)' @loading="onLoading"/>
   </div>
 </template>
 
 <script>
 import Search from '@/components/restrict/post/Search';
-import Register from '@/components/restrict/post/Register';
+import RegisterPost from '@/components/restrict/post/Register';
 import CustomButton from '@/components/form/Button';
 
 let domModule = weex.requireModule('dom');
@@ -20,7 +20,7 @@ export default {
 
   components: {
     Search,
-    Register,
+    RegisterPost,
     WxcLoading,
     CustomButton,
   },
@@ -28,6 +28,10 @@ export default {
   data() {
     return {
       toggleLoading: false,
+      noShow: {
+        registerPost: ['guide/Index'],
+        search: ['guide/Index'],
+      },
     };
   },
 

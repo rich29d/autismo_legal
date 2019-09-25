@@ -1,7 +1,7 @@
 <template>
   <button :class="classColor">
     <text v-if='icon' class='icon' v-html='`&#x${icon};`'/>
-    {{ text }}
+    <span>{{ text }}</span>
   </button>
 </template>
 

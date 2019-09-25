@@ -9,6 +9,8 @@
         <text class="Title">{{ $route.meta.title }}</text>
       </div>
   
+      <menu />
+
       <component :reload='reload' :is='require(`@/components/restrict/${$route.name}`)' />
     </div>
   </div>
@@ -17,6 +19,7 @@
 <script>
 import CustomButton from '@/components/form/Button';
 import HeaderUser from '@/components/restrict/HeaderUser';
+import Menu from '@/components/restrict/Menu';
 import { get } from 'lodash';
 
 export default {
@@ -25,6 +28,7 @@ export default {
   components: {
     HeaderUser,
     CustomButton,
+    Menu,
   },
 
   data() {
@@ -43,6 +47,7 @@ export default {
 .Main
   background-color #e7eaec
   min-height 100vh
+  padding-bottom 40vw
 
   .Title
     color: #3f4867;
