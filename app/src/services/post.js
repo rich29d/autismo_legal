@@ -2,7 +2,7 @@ import core from '@/api/core';
 
 const existInvalidSearch = search =>
   // eslint-disable-next-line no-mixed-operators
-  (!search.term && 'Digite para buscar!') ||
+  (!search.term && search.term !== false && 'Digite para buscar!') ||
   // eslint-disable-next-line no-mixed-operators
   (!search.category && 'Selecione uma categoria!');
 

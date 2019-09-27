@@ -52,6 +52,7 @@ export default {
   name: 'Login',
   data() {
     return {
+      attempts: 5,
       email: '',
       senha: '',
     };
@@ -75,9 +76,21 @@ export default {
 
       if (success) {
         location.assign('#/publicacoes');
-      } else {
-        toast(message);
+        return
       }
+
+      if (message) {
+        toast(message);
+        return
+      }
+
+      if (attempts === 0) {
+        toast('Falha ao fazer login.');
+        return
+      }
+      
+      this.attempts--;
+      this.verify();
     },
   },
 };

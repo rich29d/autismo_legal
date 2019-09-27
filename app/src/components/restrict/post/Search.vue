@@ -23,16 +23,19 @@
           />
 
           <field
+            :options='optionsSelectCategory'
+            v-model='category'
             label="Categoria"
-            typeField="text"
-            placeholder="Digite uma categoria"
-            class="Margin__Bottom--1"
-            v-model="category"
+            typeField="select"
+            placeholder="Selecione uma categoria"
+            class='Margin__Bottom--2'
+            borderColor='White'
+            labelColor='White'
           />
         </div>
 
         <div class="Text__Right Block">
-          <custom-button text="Buscar" color="White" @click="loadPosts()"></custom-button>
+          <custom-button text="Buscar" color="White" @click="searchPosts()"></custom-button>
         </div>
       </div>
 
@@ -45,7 +48,9 @@
 import CustomButton from "@/components/form/Button";
 import List from "@/components/restrict/post/List";
 import PostService from "@/services/post";
+import ParametersService from "@/services/parameters";
 import Field from '@/components/form/Field';
+import convertOptionsSelect from '@/util/convertOptionsSelect'
 
 export default {
   name: "Search",
@@ -58,6 +63,7 @@ export default {
 
   data() {
     return {
+      optionsSelectCategory: [],
       show: false,
       items: [],
       category: "",
@@ -66,14 +72,15 @@ export default {
   },
 
   methods: {
-    async loadPosts() {      
+    async searchPosts() {      
       this.$emit("loading", true);
       this.items = [];
 
-      const { success, message, content } = await PostService.search({
-        category: this.category || '',
-        term: this.term || '',
-      });
+      const { success, message, content } =
+        await PostService.search({
+          category: this.category || 'todas',
+          term: this.term || false,
+        });
 
       this.$emit("loading", false);
 
@@ -84,9 +91,21 @@ export default {
       }
     },
 
+    async loadCategories() {
+      const { success, message, content } =
+        await ParametersService.indexByType('CATEG-PUBLICACAO');
+
+      this.optionsSelectCategory =
+        convertOptionsSelect(content, 'idParametro', 'descricao')
+    },
+
     showSearch() {
       this.show = true;      
     },
+  },
+
+  mounted() {
+    this.loadCategories();
   },
 };
 </script>
